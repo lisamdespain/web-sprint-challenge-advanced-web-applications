@@ -94,7 +94,13 @@ export default function App() {
       console.log(res)
       setSpinnerOn(false);
       setMessage(res.data.message);
-      setArticles([...articles], res.data.article)
+      const newArticle= {
+        article_id: res.data.article.article_id, 
+        title: res.data.article.title, 
+        text: res.data.article.text, 
+        topic: res.data.article.topic
+      }
+      setArticles([...articles, newArticle])
     })
     .catch(err => {
       console.log(err)
@@ -111,7 +117,13 @@ export default function App() {
     axiosWithAuth().put(`articles/${currentArticleId}`, article)
     .then(res => {
       console.log(res)
-      setArticles(...articles, res.data.article)
+      const updatedArticle= {
+        article_id: res.data.article.article_id, 
+        title: res.data.article.title, 
+        text: res.data.article.text, 
+        topic: res.data.article.topic
+      }
+      setArticles([...articles, updatedArticle])
       setSpinnerOn(false);
       setMessage(res.data.message);
   })

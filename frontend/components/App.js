@@ -3,7 +3,6 @@ import { NavLink, Routes, Route, useNavigate } from 'react-router-dom'
 import Articles from './Articles'
 import LoginForm from './LoginForm'
 import Message from './Message'
-import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
 import { AuthRoute } from './AuthRoute'
 import { axiosWithAuth } from '../axios/index'
@@ -15,7 +14,7 @@ export default function App() {
   // ✨ MVP can be achieved with these states
   const [message, setMessage] = useState('')
   const [articles, setArticles] = useState([])
-  const [currentArticleId, setCurrentArticleId] = useState('')
+  const [currentArticleId, setCurrentArticleId] = useState(null)
   const [spinnerOn, setSpinnerOn] = useState(false)
 
   // ✨ Research `useNavigate` in React Router v.6
@@ -66,7 +65,7 @@ export default function App() {
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
     setMessage("");
-    setCurrentArticleId('');
+    setCurrentArticleId(null);
     setSpinnerOn(true);
     axiosWithAuth().get('/articles')
     .then(res => {
@@ -121,7 +120,6 @@ export default function App() {
         text: res.data.article.text, 
         topic: res.data.article.topic
       }
-      // const newArticlesArray = articles.map(article => article.article_id === res.article.article_id ? article = updatedArticle : article)
       const newArticlesArray = articles.map(article => 
         article.article_id === res.data.article.article_id ? 
             {...articles, ...updatedArticle} : article );
@@ -137,13 +135,18 @@ export default function App() {
 
   const deleteArticle = id => {
     // ✨ implement
+    setMessage("");
+    setSpinnerOn(true)
     axiosWithAuth().delete(`/articles/${id}`)
     .then(res=>{
+      setArticles(articles.filter((article) => article.article_id !== id))
+
       setMessage(res.data.message);
-      setArticles(articles.filter((article) => id !== article.article_id))
-      setCurrentArticleId('');
+      setCurrentArticleId(null);
+      setSpinnerOn(false)
     })
     .catch(err=> console.log(err))
+    setSpinnerOn(false);
   }
 
   return (
@@ -162,24 +165,23 @@ export default function App() {
           <Route path='/articles' element={
             <AuthRoute>
               <Articles 
+              articles={articles}
               getArticles={getArticles} 
-              articles={articles} 
               deleteArticle={deleteArticle} 
               setCurrentArticleId={setCurrentArticleId}
               currentArticleId={currentArticleId}
               updateArticle={updateArticle} 
               postArticle={postArticle}/>
+            
+            
             </AuthRoute>
+            
+
           }>
 
           </Route>
           <Route path="/" element={<LoginForm login={login} />} />
-          <Route path="articles" element={
-            <>
-              <ArticleForm  />
-              <Articles />
-            </>
-          } />
+          
         </Routes>
         <footer>Bloom Institute of Technology 2022</footer>
       </div>

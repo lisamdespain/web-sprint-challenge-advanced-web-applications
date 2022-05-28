@@ -32,5 +32,5 @@ export default function Spinner(props) {
 }
 
 Spinner.propTypes = {
-  on: PT.bool.isRequired,
+  spinnerOn: PT.bool.isRequired,
 }

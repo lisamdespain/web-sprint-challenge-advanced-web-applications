@@ -19,7 +19,6 @@ const handleEditClick = (id) =>{
 }
 
 const handleDeleteClick = (id)=>{
-  setCurrentArticleId(id)
   deleteArticle(id);
 }
   return (

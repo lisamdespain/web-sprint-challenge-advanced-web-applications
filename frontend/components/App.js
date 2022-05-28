@@ -136,6 +136,7 @@ export default function App() {
   const deleteArticle = id => {
     // ✨ implement
     setMessage("");
+    console.log(id)
     setSpinnerOn(true)
     axiosWithAuth().delete(`/articles/${id}`)
     .then(res=>{

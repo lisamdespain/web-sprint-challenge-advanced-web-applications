@@ -47,7 +47,6 @@ export default function App() {
     setSpinnerOn(true);
     axiosWithAuth().post('/login', { username, password })
     .then(res => {
-      console.log(res)
       localStorage.setItem('token', res.data.token)
       setSpinnerOn(false);
       setMessage(res.data.message);
@@ -67,6 +66,7 @@ export default function App() {
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
     setMessage("");
+    setCurrentArticleId('');
     setSpinnerOn(true);
     axiosWithAuth().get('/articles')
     .then(res => {
@@ -91,7 +91,6 @@ export default function App() {
     setSpinnerOn(true);
     axiosWithAuth().post('/articles', article)
     .then(res => {
-      console.log(res)
       setSpinnerOn(false);
       setMessage(res.data.message);
       const newArticle= {
@@ -116,8 +115,7 @@ export default function App() {
     setSpinnerOn(true);
     axiosWithAuth().put(`articles/${currentArticleId}`, article)
     .then(res => {
-      console.log(res)
-      const updatedArticle= {
+        const updatedArticle= {
         article_id: res.data.article.article_id, 
         title: res.data.article.title, 
         text: res.data.article.text, 
@@ -141,7 +139,6 @@ export default function App() {
     // ✨ implement
     axiosWithAuth().delete(`/articles/${id}`)
     .then(res=>{
-      console.log(res)
       setMessage(res.data.message);
       setArticles(articles.filter((article) => id !== article.article_id))
       setCurrentArticleId('');

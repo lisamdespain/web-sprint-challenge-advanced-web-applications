@@ -123,7 +123,11 @@ export default function App() {
         text: res.data.article.text, 
         topic: res.data.article.topic
       }
-      setArticles([...articles, updatedArticle])
+      // const newArticlesArray = articles.map(article => article.article_id === res.article.article_id ? article = updatedArticle : article)
+      const newArticlesArray = articles.map(article => 
+        article.article_id === res.data.article.article_id ? 
+            {...articles, ...updatedArticle} : article );
+      setArticles(newArticlesArray)
       setSpinnerOn(false);
       setMessage(res.data.message);
   })

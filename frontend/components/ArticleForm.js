@@ -7,18 +7,28 @@ export default function ArticleForm(props) {
   const [values, setValues] = useState(initialFormValues)
   // ✨ where are my props? Destructure them here
  const {currentArticleId, articles, updateArticle, postArticle,setCurrentArticleId} = props;
-  useEffect(() => {
-    // ✨ implement
-    // Every time the `currentArticle` prop changes, we should check it for truthiness:
-    // if it's truthy, we should set its title, text and topic into the corresponding
-    // values of the form. If it's not, we should reset the form back to initial values.
-    console.log(currentArticleId)
-    articles.filter((article) => {article.article_id === currentArticleId ? setValues(article): setValues(initialFormValues)})
-  }, [currentArticleId])
+ 
+ useEffect(() => {
+  // ✨ implement
+  // Every time the `currentArticle` prop changes, we should check it for truthiness:
+  // if it's truthy, we should set its title, text and topic into the corresponding
+  // values of the form. If it's not, we should reset the form back to initial values.
+  !currentArticleId ? setValues(initialFormValues) :
+  articles.filter(article => {
+    if (currentArticleId === article.article_id){
+      setValues({
+        title: article.title,
+        text: article.text,
+        topic: article.topic
+      })
+    }  
+  })
+  
+}, [currentArticleId])
 
-  const onChange = evt => {
-    const { id, value } = evt.target
-    setValues({ ...values, [id]: value })
+  function onChange(evt) {
+    const { id, value } = evt.target;
+    setValues({ ...values, [id]: value });
   }
 
   const onSubmit = evt => {
@@ -45,6 +55,7 @@ export default function ArticleForm(props) {
       return true;
     }
   }
+
   return (
     // ✨ fix the JSX: make the heading display either "Edit" or "Create"
     // and replace Function.prototype with the correct function
